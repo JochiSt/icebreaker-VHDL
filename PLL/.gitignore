@@ -1,1 +1,3 @@
 PLLtest_syn.v
+PLLtest_tb.cpp
+PLLtest_tb.h
