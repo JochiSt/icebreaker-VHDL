@@ -1,7 +1,9 @@
+`timescale 1ns / 1ps
+
 module testbench;
 
     reg clk;
-    always #5 clk = (clk === 1'b0);
+    always #1 clk = (clk === 1'b0);
 
     wire led1, led2, led3, led4, led5;
 
