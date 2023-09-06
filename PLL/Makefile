@@ -56,15 +56,15 @@ sim: $(PROJECT)_tb.vcd
 #%_tb.vcd: %_tb
 #	vvp -N $< +vcd=$@
 
-%_tb.cpp: %_tb.v $(OBJECT_FILES)
-	yosys -m ghdl -p "read_verilog -sv $<; \
+%_tb.cpp: $(OBJECT_FILES)
+	yosys -m ghdl -p " \
 			ghdl $(GHDL_OPTIONS) $(TOP_MODULE); \
-			hierarchy -check -top testbench; \
+			hierarchy -check -top PLLtest; \
 			write_cxxrtl -header $@"
 	sed -i '1s/^/#include <iostream>\n/' $@
 
 %_tb: %_tb.cpp %_tb_main.cpp
-	g++-9 -g -O3 -I`yosys-config --datdir`/include -DEXAMPLE_TOP=\"$<\" -std=c++14 $^ -o $@
+	clang++ -g -O3 -I`yosys-config --datdir`/include -std=c++14 $^ -o $@
 
 %_tb.vcd: %_tb
 	./$< 2 $@

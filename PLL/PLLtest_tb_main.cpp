@@ -1,26 +1,66 @@
 #include <iostream>
+#include <fstream>
+
 #include "PLLtest_tb.h"
+
+#include <backends/cxxrtl/cxxrtl_vcd.h>
 
 using namespace std;
 
 int main(){
-    cxxrtl_design::p_testbench top;
+    cxxrtl_design::p_PLLtest top;
+
+    // inspired and adapted from
+    // https://github.com/tomverbeure/cxxrtl_eval/blob/master/blink_vcd/main.cpp
+
+    // debug_items maps the hierarchical names of signals and memories in the design
+    // to a cxxrtl_object (a value, a wire, or a memory)
+    cxxrtl::debug_items all_debug_items;
+
+    // Load the debug items of the top down the whole design hierarchy
+    top.debug_info(all_debug_items);
+
+    // vcd_writer is the CXXRTL object that's responsible of creating a string with
+    // the VCD file contents.
+    cxxrtl::vcd_writer vcd;
+    vcd.timescale(1, "us");
+
+    // Here we tell the vcd writer to dump all the signals of the design, except for the
+    // memories, to the VCD file.
+    //
+    // It's not necessary to load all debug objects to the VCD. There is, for example,
+    // a  vcd.add(<debug items>, <filter>)) method which allows creating your custom filter to decide
+    // what to add and what not. 
+    vcd.add_without_memories(all_debug_items);
+
+    std::ofstream waves("waves.vcd");
 
     bool prev_led = 0;
 
     top.step();
-    for(int cycle=0;cycle<1000;++cycle){
 
-        top.p_clk.set<bool>(false);
+    // We need to manually tell the VCD writer when sample and write out the traced items.
+    // This is only a slight inconvenience and allows for complete flexibilty.
+    // E.g. you could only start waveform tracing when an internal signal has reached some specific
+    // value etc.
+    vcd.sample(0);
+
+    for(int cycle=0;cycle<10000; ++cycle){
+        std::cout << "cycle " << cycle << std::endl;
+
+        top.p_CLK.set<bool>(false);
         top.step();
-        top.p_clk.set<bool>(true);
+        top.p_CLK.set<bool>(true);
         top.step();
 
-        bool cur_led = top.p_uut_2e_LED1.get<bool>();
+        bool cur_led = top.p_LED1.get<bool>();
 
         if (cur_led != prev_led){
             cout << "cycle " << cycle << " - led: " << cur_led << endl;
         }
         prev_led = cur_led;
+
+        waves << vcd.buffer;
+        vcd.buffer.clear();
     }
 }
