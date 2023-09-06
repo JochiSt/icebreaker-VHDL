@@ -10,11 +10,18 @@ GHDL_OPTIONS=--latches
 
 ###############################################################################
 
+.PHONY: all prog clean total_clean postsim sim
+
+.SECONDARY: $(PROJECT).bin
+
 all: $(PROJECT).rpt $(PROJECT).bin
 
+# Program FPGA
 prog: $(PROJECT).bin
 	iceprog $<
 
+###############################################################################
+# CLEANING
 clean:
 	rm -f *.o *.cf
 
@@ -22,10 +29,12 @@ total_clean: clean
 	rm $(PROJECT).{asc,bin,rpt,json}
 
 ###############################################################################
+# Synthesis
 
 $(PROJECT).json: $(OBJECT_FILES)
 	yosys -m ghdl -p 'ghdl $(GHDL_OPTIONS) $(TOP_MODULE); synth_ice40 -json $@'
 
+# Place and Route
 $(PROJECT).asc: $(PROJECT).json $(CONSTRAINT)
 	nextpnr-ice40 --up5k --package sg48 --pcf $(CONSTRAINT) --freq 12 --asc $@ \
 		--json $< --placed-svg $(PROJECT)_placed.svg --routed-svg $(PROJECT)_routed.svg \
@@ -38,6 +47,31 @@ $(PROJECT).rpt: $(PROJECT).asc
 	icetime -d up5k -c 12 -mtr $@ $<
 
 ###############################################################################
+# POST synthesis simulation
+# inspired and adapted
+# 		from https://github.com/YosysHQ/icestorm/blob/master/examples/icestick/
+
+%_tb: %_tb.v %.v
+	iverilog -o $@ $^
+
+%_tb.vcd: %_tb
+	vvp -N $< +vcd=$@
+
+%_syn.v: %.json
+	yosys -p 'read_json $^; write_verilog $@'
+
+%_syntb: %_tb.v %_syn.v
+	iverilog -g2012 -o $@ $^ `yosys-config --datdir/ice40/cells_sim.v`
+
+%_syntb.vcd: %_syntb
+	vvp -n $< +vcd=$@
+
+sim: $(PROJECT)_tb.vcd
+
+postsim: $(PROJECT)_syntb.vcd
+
+###############################################################################
+# 'compile' VHDL files
 
 %.o: %.vhdl
 	ghdl -a $<
