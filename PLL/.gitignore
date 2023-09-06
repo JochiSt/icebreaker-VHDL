@@ -1,3 +1,7 @@
+# generated netlist after synthesis
 PLLtest_syn.v
+
+# simulation file
+PLLtest_tb
 PLLtest_tb.cpp
 PLLtest_tb.h
