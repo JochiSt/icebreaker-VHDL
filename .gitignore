@@ -5,5 +5,10 @@
 *.nplog
 *.rpt
 *.yslog
-*.cf
 *.svg
+
+# GHDL output
+*.cf
+
+# simulation waveform
+*.vcd
