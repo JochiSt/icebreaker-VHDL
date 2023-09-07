@@ -45,8 +45,10 @@ int main(){
     // value etc.
     vcd.sample(0);
 
-    for(int cycle=0;cycle<10000; ++cycle){
-        std::cout << "cycle " << cycle << std::endl;
+    for(long cycle=0; cycle<100000000; ++cycle){
+        if(cycle % 1000000 == 0){
+            std::cout << "cycle " << cycle << std::endl;
+        }
 
         top.p_CLK.set<bool>(false);
         top.step();
