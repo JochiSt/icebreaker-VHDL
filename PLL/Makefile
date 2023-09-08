@@ -12,7 +12,7 @@ GHDL_OPTIONS=--latches
 
 .PHONY: all prog clean total_clean postsim sim
 
-.SECONDARY: $(PROJECT).bin $(PROJECT)_tb
+.SECONDARY: $(PROJECT).bin $(PROJECT)_tb $(PROJECT)_tb.vcd
 
 all: $(PROJECT).rpt $(PROJECT).bin
 
