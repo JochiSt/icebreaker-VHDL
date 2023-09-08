@@ -51,7 +51,9 @@ $(PROJECT).rpt: $(PROJECT).asc
 sim: $(PROJECT)_tb.vcd
 
 simview: $(PROJECT)_tb.vcd
-	gtkwave --optimize $<
+	# alternative:
+	# gtkwave --optimize $<
+	gtkwave -g $<
 
 #%_tb: %_tb.v %.v
 #	iverilog -o $@ $^
