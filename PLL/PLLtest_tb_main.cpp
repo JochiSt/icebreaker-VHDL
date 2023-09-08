@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int main(){
+int main(int argc, char *argv[]){
     cxxrtl_design::p_PLLtest top;
 
     // inspired and adapted from
@@ -33,7 +33,12 @@ int main(){
     // what to add and what not. 
     vcd.add_without_memories(all_debug_items);
 
-    std::ofstream waves("waves.vcd");
+    std::ofstream waves;
+    if( argc > 1){
+        waves.open(argv[1]);
+    }else{
+        waves.open("waves.vcd");
+    }
 
     bool prev_led = 0;
 
