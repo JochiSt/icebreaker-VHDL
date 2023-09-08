@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
     // vcd_writer is the CXXRTL object that's responsible of creating a string with
     // the VCD file contents.
     cxxrtl::vcd_writer vcd;
-    vcd.timescale(1, "us");
+    vcd.timescale(1, "ns");
 
     // Here we tell the vcd writer to dump all the signals of the design, except for the
     // memories, to the VCD file.
