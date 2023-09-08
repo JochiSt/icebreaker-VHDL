@@ -26,7 +26,8 @@ clean:
 	rm -f *.o *.cf
 
 total_clean: clean
-	rm $(PROJECT).{asc,bin,rpt,json}
+	rm -f $(PROJECT).{asc,bin,rpt,json}
+	rm -f *.vcd *.fst
 
 ###############################################################################
 # Synthesis
