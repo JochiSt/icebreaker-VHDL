@@ -70,7 +70,7 @@ simview: $(PROJECT)_tb.vcd
 	clang++ -g -O3 -I`yosys-config --datdir`/include -std=c++14 $^ -o $@
 
 %_tb.vcd: %_tb
-	./$< 2 $@
+	./$< $@
 
 # POST synthesis simulation
 # inspired and adapted
