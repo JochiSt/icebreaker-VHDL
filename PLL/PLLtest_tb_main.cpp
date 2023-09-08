@@ -52,8 +52,12 @@ int main(){
 
         top.p_CLK.set<bool>(false);
         top.step();
+        vcd.sample(cycle*2 + 0);
+
         top.p_CLK.set<bool>(true);
         top.step();
+        vcd.sample(cycle*2 + 1);
+
 
         bool cur_led = top.p_LED1.get<bool>();
 
