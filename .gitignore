@@ -12,3 +12,6 @@
 
 # simulation waveform
 *.vcd
+
+# compiled simulation
+*.o
