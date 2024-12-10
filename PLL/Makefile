@@ -70,7 +70,7 @@ simview: $(PROJECT)_tb.vcd
 	sed -i '1s/^/#include <iostream>\n/' $@
 
 %_tb: %_tb.cpp %_tb_main.cpp
-	clang++ -g -O3 -I`yosys-config --datdir`/include -std=c++14 $^ -o $@
+	clang++ -g -O3 -I`yosys-config --datdir`/include/backends/cxxrtl/runtime/ -std=c++14 $^ -o $@
 
 %_tb.vcd: %_tb
 	./$< $@
