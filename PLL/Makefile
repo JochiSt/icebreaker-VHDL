@@ -28,6 +28,7 @@ clean:
 total_clean: clean
 	rm -f $(PROJECT).{asc,bin,rpt,json}
 	rm -f *.vcd *.fst
+	rm -f *.svg
 
 ###############################################################################
 # Synthesis
